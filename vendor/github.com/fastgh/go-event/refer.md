@@ -1,0 +1,30 @@
+- https://github.com/asaskevich/EventBus: [Go] Lightweight eventbus with async compatibility for Go
+- https://github.com/argoproj/argo-events
+- https://github.com/looplab/eventhorizon
+- https://github.com/Ksloveyuan/channelx: Some useful tools implemented by channel to increase development efficiency, e.g. event bus, promise, actor, stream, aggregator, goroutine pool, etc..
+- https://github.com/davecgh/go-spew: Implements a deep pretty printer for Go data structures to aid in debugging
+- https://github.com/elazarl/goproxy: An HTTP proxy library for Go
+- https://github.com/google/martian: Martian is a library for building custom HTTP/S proxies
+- https://github.com/pires/go-proxyproto: A Go library implementation of the PROXY protocol, versions 1 and 2.
+- https://github.com/go-httpproxy/httpproxy: Go HTTP proxy server library
+- https://github.com/txthinking/socks5: SOCKS Protocol Version 5 Library in Go. Full TCP/UDP and IPv4/IPv6 support
+- https://github.com/dutchcoders/sshproxy: Golang library to proxy ssh connections
+- https://github.com/mattico/proxy-config: A Rust library to get proxy configuration from the OS.
+- https://github.com/zzzgydi/sysproxy-rs: A Rust library for set/get system proxy. Supports Windows, macOS and linux (via gsettings).
+- https://github.com/skywind3000/kcp: KCP - A Fast and Reliable ARQ Protocol
+- https://www.v2ray.com/, https://github.com/v2ray/v2ray-core - A platform for building proxies to bypass network restrictions.
+- https://github.com/vzex/dog-tunnel: p2p tunnel,(udp mode work with kcp,https://github.com/skywind3000/kcp)
+- https://github.com/xtaci/kcptun: A Stable & Secure Tunnel based on KCP with N:M multiplexing and FEC. Available for ARM, MIPS, 386 and AMD64
+- https://github.com/xtaci/kcp-go: https://github.com/xtaci/kcp-go
+- https://github.com/xtaci/gaio: High performance async-io(proactor) networking for Golang
+- https://github.com/tidwall/evio: Fast event-loop networking for Go
+- https://github.com/xtaci/safebox:
+- https://github.com/xtaci/tcpraw: https://github.com/xtaci/tcpraw
+- https://github.com/xtaci/lossyconn: lossy connection simulator
+- https://github.com/xtaci/smux: A Stream Multiplexing Library for golang with least memory usage(TDMA)
+- https://github.com/go-playground/pool: a limited consumer goroutine or unlimited goroutine pool for easier goroutine handling and cancellation
+- https://github.com/Jeffail/tunny: A goroutine pool for Go
+- https://github.com/xxjwxc/gowp: golang worker pool , Concurrency limiting goroutine pool
+- https://github.com/xxjwxc/public: util toolkit for go.golang 通用函数包
+- https://github.com/xxjwxc/uber_go_guide_cn: Uber Go 语言编码规范中文版.
+

@@ -1,0 +1,16 @@
+version: '3'
+
+tasks:
+  mockgen:
+    cmds:
+      - task: rm
+        vars:
+           TARGET: "test/{{.MOCK_DEST_FILE}}"
+      - mockgen -destination test/{{.MOCK_DEST_FILE}} -package test --build_flags=--mod=mod {{.PROJECT_PKG}} {{.MOCK_INTERFACE}}
+  rm:
+    cmds:
+      - echo $PATH
+      - '{{if eq OS "windows"}} powershell Remove-Item {{.TARGET}} -Force -Recurse {{else}} rm -rf {{.TARGET}} {{end}}'
+  cp:
+    cmds:
+      - '{{if eq OS "windows"}} powershell Copy-Item {{.SRC}} {{.TARGET}} -Recurse {{else}} cp -rf  {{.SRC}} {{.TARGET}} {{end}}'

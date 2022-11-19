@@ -1,0 +1,2 @@
+- subscribe once: listener will be removed after executing.
+- subscribe sync vs. subscribe async

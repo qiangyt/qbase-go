@@ -1,0 +1,64 @@
+version: '3'
+
+env:
+  VERSION:
+    sh: git describe --tags --always # or: git log -n 1 --format=%h
+
+output: prefixed
+
+tasks:
+  init:
+    desc: init env, including install dependent tools
+    cmds:
+      - go install github.com/golang/mock/mockgen@v1.6.0
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
+      - go install github.com/dmarkham/enumer@v1.5.6
+      - go install mvdan.cc/gofumpt@v0.4.0
+
+  gen:
+    desc: generate sources, for ex. enum.
+    cmds:
+      - enumer -gqlgen -json -sql -text -yaml -type LogEnum -output log_enum_generated.go -transform whitespace
+      - enumer -gqlgen -json -sql -text -yaml -type LogLevel -output log_level_generated.go -trimprefix LogLevel -transform upper
+
+  mod:
+    desc: Downloads and tidy Go modules
+    cmds:
+      - go mod download
+      - go mod tidy
+      - go mod vendor
+
+  lint:
+    desc: Runs golangci-lint
+    sources:
+      - './**/*.go'
+    cmds:
+      - golangci-lint run
+
+  format:
+    cmds:
+      - gofumpt -l -w .
+
+  build:
+    desc: build
+    cmds:
+      - task: format
+      - GOOS=darwin go build -trimpath .
+      - GOOS=linux go build -trimpath .
+      - GOOS=windows go build -trimpath .
+
+  run:
+    desc: run examples
+    cmds:
+      - go run ./examples/hello/main.go
+
+  default:
+    desc: run test cases then create coverage report (./coverage.html)
+    cmds:
+      - go test ./... -covermode=count -coverprofile=coverage.out gcflags=all=-l -timeout 30s
+      - go tool cover -html=./coverage.out -o ./coverage.html
+
+  benchmark:
+    desc: test benchmark
+    cmds:
+      - go test -run=none ./benchmark -benchtime=1s -bench=Benchmark  #-cpu=1,8,16,32,64,128,256

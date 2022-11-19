@@ -1,0 +1,66 @@
+version: '3'
+
+env:
+  VERSION:
+    sh: git describe --tags --always # or: git log -n 1 --format=%h
+  PROJECT_PKG: github.com/fastgh/go-comm/v2
+
+includes:
+  base: tasks/base.yml
+
+output: prefixed
+
+tasks:
+  init:
+    desc: init env, including install dependent tools
+    cmds:
+      - go install github.com/golang/mock/mockgen@v1.6.0
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.49.0
+      - go install github.com/dmarkham/enumer@v1.5.6
+      - go install mvdan.cc/gofumpt@v0.4.0
+      - go install honnef.co/go/tools/cmd/staticcheck@v0.3.3
+
+  mod:
+    desc: Downloads and tidy Go modules
+    cmds:
+      - go mod download
+      - go mod tidy
+      - go mod vendor
+
+  lint:
+    desc: Runs golangci-lint
+    sources:
+      - './**/*.go'
+    cmds:
+      - staticcheck ./...
+      - golangci-lint run
+
+  format:
+    cmds:
+      - gofumpt -l -w .
+
+  build:
+    desc: build
+    cmds:
+      - task: format
+      - GOOS=darwin go build -trimpath .
+      - GOOS=linux go build -trimpath .
+      - GOOS=windows go build -trimpath .
+
+  gen:
+    desc: generates go source files
+    cmds:
+      - task: base:mockgen
+        vars:
+          MOCK_DEST_FILE: mock_file_test.go
+          MOCK_INTERFACE: File
+
+  default:
+    desc: run test cases then create coverage report (./coverage.html)
+    cmds:
+      - task: gen
+      - task: build
+      - task: lint
+      - go test ./... -covermode=count -coverprofile=coverage.out gcflags=all=-l -timeout 3s github.com/fastgh/go-comm/v2/test
+      - go tool cover -html=./coverage.out -o ./coverage.html
+
