@@ -24,13 +24,14 @@ func DefaultEtcHostsP() string {
 }
 
 func DefaultEtcHosts() (string, error) {
-	if IsWindows() {
+	gos := runtime.GOOS
+	if gos == "windows" {
 		return `C:\Windows\System32\Drivers\etc\hosts`, nil
 	}
-	if IsLinux() {
+	if gos == "darwin" {
 		return "/etc/hosts", nil
 	}
-	if IsDarwin() {
+	if gos == "linux" {
 		return "/private/etc/hosts", nil
 	}
 	return "", errors.New(runtime.GOOS + " is not yet supported")

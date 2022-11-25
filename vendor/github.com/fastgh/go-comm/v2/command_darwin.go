@@ -8,11 +8,11 @@ import (
 	"strings"
 )
 
-func RunSudoCommand(vars map[string]any, dir string, cmd string, passwordInput FnInput) (CommandOutput, error) {
+func RunSudoCommand(vars map[string]string, dir string, cmd string, passwordInput FnInput) (CommandOutput, error) {
 	return RunAppleScript(vars, passwordInput(), dir, cmd)
 }
 
-func RunAppleScriptP(vars map[string]any, adminPassword string, dir string, script string) CommandOutput {
+func RunAppleScriptP(vars map[string]string, adminPassword string, dir string, script string) CommandOutput {
 	r, err := RunAppleScript(vars, adminPassword, dir, script)
 	if err != nil {
 		panic(err)
@@ -20,7 +20,7 @@ func RunAppleScriptP(vars map[string]any, adminPassword string, dir string, scri
 	return r
 }
 
-func RunAppleScript(vars map[string]any, adminPassword string, dir string, script string) (CommandOutput, error) {
+func RunAppleScript(vars map[string]string, adminPassword string, dir string, script string) (CommandOutput, error) {
 	subArgs := []string{fmt.Sprintf(`do shell script "%s"`, script)}
 
 	if len(adminPassword) > 0 {
@@ -31,6 +31,6 @@ func RunAppleScript(vars map[string]any, adminPassword string, dir string, scrip
 	return RunCommandNoInput(vars, dir, "osascript", "-e", strings.Join(subArgs, " "))
 }
 
-func RunUserCommand(vars map[string]any, dir string, cmd string) (CommandOutput, error) {
+func RunUserCommand(vars map[string]string, dir string, cmd string) (CommandOutput, error) {
 	return RunCommandNoInput(vars, dir, "open", cmd)
 }

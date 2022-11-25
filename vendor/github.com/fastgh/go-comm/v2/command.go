@@ -26,7 +26,7 @@ const (
 
 type CommandOutputT struct {
 	Kind CommandOutputKind
-	Vars map[string]any
+	Vars map[string]string
 	Text string
 	Json any
 }
@@ -42,7 +42,11 @@ func ParseCommandOutputP(outputText string) CommandOutput {
 }
 
 func ParseCommandOutput(outputText string) (CommandOutput, error) {
-	r := &CommandOutputT{Kind: COMMAND_OUTPUT_KIND_TEXT, Text: outputText}
+	r := &CommandOutputT{
+		Kind: COMMAND_OUTPUT_KIND_TEXT,
+		Vars: map[string]string{},
+		Text: outputText,
+	}
 
 	if strings.HasPrefix(outputText, "$json$\n\n") {
 		jsonBody := outputText[len("$json$\n\n"):]
@@ -66,29 +70,29 @@ func ParseCommandOutput(outputText string) (CommandOutput, error) {
 	return r, nil
 }
 
-func Vars2Pair(vars map[string]any) []string {
+func Vars2Pair(vars map[string]string) []string {
 	if len(vars) == 0 {
 		return nil
 	}
 
 	r := make([]string, 0, len(vars))
 	for k, v := range vars {
-		r = append(r, k+"="+cast.ToString(v))
+		r = append(r, k+"="+v)
 	}
 	return r
 }
 
-func Text2Vars(text string) map[string]any {
+func Text2Vars(text string) map[string]string {
 	pairs := Text2Lines(text)
 	return Pair2Vars(pairs)
 }
 
-func Pair2Vars(pairs []string) map[string]any {
+func Pair2Vars(pairs []string) map[string]string {
 	if len(pairs) == 0 {
-		return map[string]any{}
+		return map[string]string{}
 	}
 
-	r := map[string]any{}
+	r := map[string]string{}
 	for _, pair := range pairs {
 		pair = strings.TrimLeft(pair, "\t \r")
 		pos := strings.IndexByte(pair, '=')
@@ -112,7 +116,7 @@ func openHandler(ctx context.Context, path string, flag int, perm os.FileMode) (
 	return interp.DefaultOpenHandler()(ctx, path, flag, perm)
 }
 
-func RunShellCommandP(vars map[string]any, dir string, sh string, cmd string, passwordInput FnInput) CommandOutput {
+func RunShellCommandP(vars map[string]string, dir string, sh string, cmd string, passwordInput FnInput) CommandOutput {
 	r, err := RunShellCommand(vars, dir, sh, cmd, passwordInput)
 	if err != nil {
 		panic(err)
@@ -120,7 +124,7 @@ func RunShellCommandP(vars map[string]any, dir string, sh string, cmd string, pa
 	return r
 }
 
-func RunShellCommand(vars map[string]any, dir string, sh string, cmd string, passwordInput FnInput) (CommandOutput, error) {
+func RunShellCommand(vars map[string]string, dir string, sh string, cmd string, passwordInput FnInput) (CommandOutput, error) {
 	if len(sh) == 0 || sh == "gosh" {
 		return RunGoshCommand(vars, dir, cmd, passwordInput)
 	}
@@ -131,7 +135,7 @@ func RunShellCommand(vars map[string]any, dir string, sh string, cmd string, pas
 	return RunUserCommand(vars, dir, cmd)
 }
 
-func RunUserCommandP(vars map[string]any, dir string, cmd string) CommandOutput {
+func RunUserCommandP(vars map[string]string, dir string, cmd string) CommandOutput {
 	r, err := RunUserCommand(vars, dir, cmd)
 	if err != nil {
 		panic(err)
@@ -147,7 +151,7 @@ func RunShellScriptFile(afs afero.Fs, url string, credentials comm.Credentials, 
 	return RunShellCommand(dir, sh, scriptContent)
 }*/
 
-func newExecCommand(vars map[string]any, dir string, cmd string, args ...string) (*exec.Cmd, error) {
+func newExecCommand(vars map[string]string, dir string, cmd string, args ...string) (*exec.Cmd, error) {
 	r := exec.Command(cmd, args...)
 	env, err := EnvironList(vars)
 	if err != nil {
@@ -158,7 +162,7 @@ func newExecCommand(vars map[string]any, dir string, cmd string, args ...string)
 	return r, nil
 }
 
-func RunCommandNoInputP(vars map[string]any, dir string, cmd string, args ...string) CommandOutput {
+func RunCommandNoInputP(vars map[string]string, dir string, cmd string, args ...string) CommandOutput {
 	r, err := RunCommandNoInput(vars, dir, cmd, args...)
 	if err != nil {
 		panic(err)
@@ -166,7 +170,7 @@ func RunCommandNoInputP(vars map[string]any, dir string, cmd string, args ...str
 	return r
 }
 
-func RunCommandNoInput(vars map[string]any, dir string, cmd string, args ...string) (CommandOutput, error) {
+func RunCommandNoInput(vars map[string]string, dir string, cmd string, args ...string) (CommandOutput, error) {
 	_cmd, err := newExecCommand(vars, dir, cmd, args...)
 	if err != nil {
 		return nil, err
@@ -181,7 +185,7 @@ func RunCommandNoInput(vars map[string]any, dir string, cmd string, args ...stri
 	return ParseCommandOutput(cast.ToString(b))
 }
 
-func RunCommandWithInput(vars map[string]any, dir string, cmd string, args ...string) func(...string) (CommandOutput, error) {
+func RunCommandWithInput(vars map[string]string, dir string, cmd string, args ...string) func(...string) (CommandOutput, error) {
 	return func(input ...string) (CommandOutput, error) {
 		if IsSudoCommand(cmd) && len(input) > 0 {
 			cmd = InstrumentSudoCommand(cmd)

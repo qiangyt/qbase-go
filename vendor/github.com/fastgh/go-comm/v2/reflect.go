@@ -22,6 +22,10 @@ func IsEmptyReflectValue(v reflect.Value) bool {
 	return false
 }
 
+func IsEmptyValue(v any) bool {
+	return IsEmptyReflectValue(reflect.ValueOf(v))
+}
+
 func IsPrimitiveReflectValue(v reflect.Value) bool {
 	switch v.Kind() {
 	case reflect.String,
@@ -39,4 +43,8 @@ func IsPrimitiveReflectValue(v reflect.Value) bool {
 	default:
 		return false
 	}
+}
+
+func IsPrimitiveValue(v any) bool {
+	return IsPrimitiveReflectValue(reflect.ValueOf(v))
 }

@@ -50,3 +50,10 @@ func (me ErrorGroup) AddAll(that ErrorGroup) {
 		me.ellors = append(me.ellors, that.ellors...)
 	}
 }
+
+func (me ErrorGroup) MayError() error {
+	if me.HasError() {
+		return me
+	}
+	return nil
+}

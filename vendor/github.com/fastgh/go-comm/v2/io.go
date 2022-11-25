@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"io"
 	"os"
-	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -63,9 +62,4 @@ func ReadLines(reader io.Reader) []string {
 	}
 
 	return r
-}
-
-func Text2Lines(text string) []string {
-	rdr := strings.NewReader(text)
-	return ReadLines(rdr)
 }

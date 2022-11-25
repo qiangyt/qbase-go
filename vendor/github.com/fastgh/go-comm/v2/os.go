@@ -23,7 +23,7 @@ func IsLinux() bool {
 	return runtime.GOOS == "linux"
 }
 
-func EnvironMapP(overrides map[string]any) map[string]string {
+func EnvironMapP(overrides map[string]string) map[string]string {
 	r, err := EnvironMap(overrides)
 	if err != nil {
 		panic(err)
@@ -31,7 +31,7 @@ func EnvironMapP(overrides map[string]any) map[string]string {
 	return r
 }
 
-func EnvironMap(overrides map[string]any) (map[string]string, error) {
+func EnvironMap(overrides map[string]string) (map[string]string, error) {
 	envs := JoinedLines(os.Environ()...)
 	r, err := UnmarshalEnv(envs)
 	if err != nil {
@@ -46,7 +46,7 @@ func EnvironMap(overrides map[string]any) (map[string]string, error) {
 	return r, nil
 }
 
-func EnvironListP(overrides map[string]any) []string {
+func EnvironListP(overrides map[string]string) []string {
 	r, err := EnvironList(overrides)
 	if err != nil {
 		panic(err)
@@ -54,7 +54,7 @@ func EnvironListP(overrides map[string]any) []string {
 	return r
 }
 
-func EnvironList(overrides map[string]any) ([]string, error) {
+func EnvironList(overrides map[string]string) ([]string, error) {
 	envs, err := EnvironMap(overrides)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func EnvironList(overrides map[string]any) ([]string, error) {
 	return r, nil
 }
 
-func EnvSubstP(input string, env map[string]any) string {
+func EnvSubstP(input string, env map[string]string) string {
 	r, err := EnvSubst(input, env)
 	if err != nil {
 		panic(err)
@@ -75,14 +75,14 @@ func EnvSubstP(input string, env map[string]any) string {
 	return r
 }
 
-func EnvSubst(input string, env map[string]any) (string, error) {
+func EnvSubst(input string, env map[string]string) (string, error) {
 	restr := parse.Restrictions{NoUnset: false, NoEmpty: false}
 
 	envMap, err := EnvironMap(env)
 	if err != nil {
 		return "", err
 	}
-	envList, err := EnvironList(DowncastMap(envMap))
+	envList, err := EnvironList(envMap)
 	if err != nil {
 		return "", err
 	}
@@ -95,7 +95,7 @@ func EnvSubst(input string, env map[string]any) (string, error) {
 	return r, nil
 }
 
-func EnvSubstSliceP(inputs []string, env map[string]any) []string {
+func EnvSubstSliceP(inputs []string, env map[string]string) []string {
 	r, err := EnvSubstSlice(inputs, env)
 	if err != nil {
 		panic(err)
@@ -103,7 +103,7 @@ func EnvSubstSliceP(inputs []string, env map[string]any) []string {
 	return r
 }
 
-func EnvSubstSlice(inputs []string, env map[string]any) ([]string, error) {
+func EnvSubstSlice(inputs []string, env map[string]string) ([]string, error) {
 	r := make([]string, 0, len(inputs))
 	for _, s := range inputs {
 		substed, err := EnvSubst(s, env)
@@ -153,4 +153,13 @@ func WorkingDirectory() (string, error) {
 		return "", errors.Wrap(err, "get working directory")
 	}
 	return r, nil
+}
+
+func AbsPath(cwd string, _path string) string {
+	r := filepath.Clean(_path)
+	if filepath.IsAbs(r) {
+		return r
+	}
+
+	return filepath.Join(filepath.Clean(cwd), _path)
 }

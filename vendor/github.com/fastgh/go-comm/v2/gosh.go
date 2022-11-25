@@ -13,7 +13,7 @@ import (
 	"mvdan.cc/sh/v3/syntax"
 )
 
-func RunGoshCommandP(vars map[string]any, dir string, cmd string, passwordInput FnInput) CommandOutput {
+func RunGoshCommandP(vars map[string]string, dir string, cmd string, passwordInput FnInput) CommandOutput {
 	r, err := RunGoshCommand(vars, dir, cmd, passwordInput)
 	if err != nil {
 		panic(err)
@@ -21,7 +21,7 @@ func RunGoshCommandP(vars map[string]any, dir string, cmd string, passwordInput 
 	return r
 }
 
-func RunGoshCommand(vars map[string]any, dir string, cmd string, passwordInput FnInput) (CommandOutput, error) {
+func RunGoshCommand(vars map[string]string, dir string, cmd string, passwordInput FnInput) (CommandOutput, error) {
 	var stdin io.Reader
 	if IsSudoCommand(cmd) {
 		password := InputSudoPassword(passwordInput)
@@ -64,5 +64,15 @@ func RunGoshCommand(vars map[string]any, dir string, cmd string, passwordInput F
 		return nil, errors.Wrapf(err, "run command: \n%s", cmd)
 	}
 
-	return ParseCommandOutput(out.String())
+	r, err := ParseCommandOutput(out.String())
+	if err != nil {
+		for vName, v := range runner.Vars {
+			if v.Exported {
+				vv := v.String()
+				r.Vars[vName] = vv
+			}
+		}
+		return nil, err
+	}
+	return r, nil
 }
