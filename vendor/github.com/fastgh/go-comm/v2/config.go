@@ -66,6 +66,8 @@ type ConfigConfig struct {
 	IgnoreUntaggedFields bool
 
 	Metadata ConfigMetadata
+
+	DoValidate bool
 }
 
 func StrictConfigConfig() *ConfigConfig {
@@ -77,6 +79,7 @@ func StrictConfigConfig() *ConfigConfig {
 		Squash:               false,
 		IgnoreUntaggedFields: true,
 		Metadata:             ConfigMetadata{},
+		DoValidate:           false,
 	}
 }
 
@@ -89,6 +92,7 @@ func DynamicConfigConfig() *ConfigConfig {
 		Squash:               true,
 		IgnoreUntaggedFields: true,
 		Metadata:             ConfigMetadata{},
+		DoValidate:           false,
 	}
 }
 
@@ -149,8 +153,10 @@ func DecodeWithMap[T any](input map[string]any, cfgcfg *ConfigConfig, result *T,
 		return nil, &cfgcfg.Metadata, errors.Wrapf(err, "decode map: %v", backend)
 	}
 
-	if err = validate.Struct(result); err != nil {
-		return nil, &cfgcfg.Metadata, errors.Wrapf(err, "validation: %v", backend)
+	if cfgcfg.DoValidate {
+		if err = validate.Struct(result); err != nil {
+			return nil, &cfgcfg.Metadata, errors.Wrapf(err, "validation: %v", backend)
+		}
 	}
 
 	return result, &cfgcfg.Metadata, nil

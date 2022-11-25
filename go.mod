@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/emirpasic/gods v1.18.1
-	github.com/fastgh/go-comm/v2 v2.2.17
+	github.com/fastgh/go-comm/v2 v2.2.18
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/afero v1.9.2
 	github.com/stretchr/testify v1.8.1

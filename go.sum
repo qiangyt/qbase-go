@@ -78,8 +78,8 @@ github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1m
 github.com/envoyproxy/go-control-plane v0.9.7/go.mod h1:cwu0lG7PUMfa9snN8LXBig5ynNVH9qI8YYLbd1fK2po=
 github.com/envoyproxy/go-control-plane v0.9.9-0.20201210154907-fd9021fe5dad/go.mod h1:cXg6YxExXjJnVBQHBLXeUAgxn2UodCpnH306RInaBQk=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
-github.com/fastgh/go-comm/v2 v2.2.17 h1:IQdL/GEZJt3gVDqJpOgBG20B7Zrp/FASrNzGZl04szQ=
-github.com/fastgh/go-comm/v2 v2.2.17/go.mod h1:ZM3ELJ58mcViHcn7+PBfgOHmQFnP9ip8bpKXtZaM2x4=
+github.com/fastgh/go-comm/v2 v2.2.18 h1:856f0lE4lxh+t3rknYRNLHctQtOHFVtdVGZ/d/7IO6I=
+github.com/fastgh/go-comm/v2 v2.2.18/go.mod h1:ZM3ELJ58mcViHcn7+PBfgOHmQFnP9ip8bpKXtZaM2x4=
 github.com/fastgh/go-event v1.0.4 h1:1k3L3OCfk56Az/AziwboiF8Wv29L2O65z6t8ylteIUM=
 github.com/fastgh/go-event v1.0.4/go.mod h1:0Be7ISA2hgolyBwb9mOc21jLmoxWXsREAivyY189EW4=
 github.com/fclairamb/ftpserver v0.0.0-20180219202821-e8c6168f48da h1:E9sjPfYqTLK8mYQX8uXM+NJOd4N6iSYGUenQ0MFa/90=
