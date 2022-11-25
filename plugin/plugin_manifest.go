@@ -17,7 +17,7 @@ type PluginManifestT struct {
 type PluginManifest = *PluginManifestT
 
 func PluginManifestWithMap(manifestMap map[string]any) PluginManifest {
-	r := comm.DecodeWithMapP(manifestMap, &comm.ConfigConfig{
+	r, _ := comm.DecodeWithMapP(manifestMap, &comm.ConfigConfig{
 		ErrorUnused:          true,
 		ErrorUnset:           false,
 		ZeroFields:           false,
